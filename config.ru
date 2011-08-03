@@ -1,11 +1,11 @@
-$:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__))
-require 'rubygems'
-require 'sinatra'
+require File.join(File.dirname(__FILE__), 'main')
 
-Sinatra::Application.default_options.merge!(
-  :run => false,
-  :env => :production
-)
+set :run, false
+set :environment, :production
 
-require 'main'
-run Sinatra.application
+FileUtils.mkdir_p 'log' unless File.exists?('log')
+log = File.new("log/sinatra.log", "a+")
+$stdout.reopen(log)
+$stderr.reopen(log)
+
+run Sinatra::Application
